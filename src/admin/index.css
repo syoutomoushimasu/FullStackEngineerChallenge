@@ -1,0 +1,19 @@
+.admin-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.admin {
+  width: 600px;
+}
+
+.new-employee {
+  margin-top: 10px;
+}
+
+.label {
+  line-height: 30px;
+}
