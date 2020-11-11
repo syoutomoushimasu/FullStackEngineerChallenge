@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Input, Row, Col } from 'antd';
+import { Button, Modal, Input, Row, Col, message } from 'antd';
+import { FETCH_URL } from '@/utils/constant';
 import './index.css';
 
 interface Props {
@@ -10,25 +11,49 @@ interface Props {
 
 const Admin: React.FC<Props> = (props) => {
   const [addVisible, setAddVisible] = useState(false);
+  const [name, setName] = useState<string | undefined>(undefined);
+  const [email, setEmail] = useState<string | undefined>(undefined);
 
   const addShowModal = () => {
     setAddVisible(true);
   }
 
   const addOk = () => {
-    // add
+    if (!name || !email) {
+      message.error('Please input name and email.');
+      return;
+    }
+    // console.log({ name, email })
+    fetch(`${FETCH_URL}/api/employee/create`, {
+        body: JSON.stringify({ name, email }),
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(myJson) {
+        console.log(myJson);
+        message.success('create success.');
+        setAddVisible(false);
+      });
   }
 
   const addCancel = () => {
     setAddVisible(false);
+    setName(undefined);
+    setEmail(undefined);
   }
 
-  const addNameChange = (e: any) => {
-    console.log(e)
+  const addNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
   }
 
-  const addEmailChange = () => {
-
+  const addEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
   }
 
   return (
@@ -48,6 +73,7 @@ const Admin: React.FC<Props> = (props) => {
         visible={addVisible}
         onOk={addOk}
         onCancel={addCancel}
+        destroyOnClose={true}
       >
         <Row>
           <Col span={4}>

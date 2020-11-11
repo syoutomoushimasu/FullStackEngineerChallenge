@@ -7,7 +7,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/koa": "^2.11.6",
+    "@types/koa-bodyparser": "^4.3.0",
     "@types/koa-router": "^7.4.1",
+    "@types/koa2-cors": "^2.0.1",
     "css-loader": "^5.0.1",
     "html-webpack-plugin": "^4.5.0",
     "nodemon": "^2.0.6",
@@ -31,11 +33,15 @@
     "antd": "^4.8.2",
     "history": "^5.0.0",
     "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.0.0",
+    "koa2-cors": "^2.0.6",
+    "mysql2": "^2.2.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "sequelize": "^6.3.5",
     "ts-node": "^9.0.0"
   }
 }

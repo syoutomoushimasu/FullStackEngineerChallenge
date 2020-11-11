@@ -12,8 +12,16 @@
 - koa && ts-node && nodemon
 - koa router && postman test
 
-## Need to do
-- fectch api
+## Day 3
 - connect mysql
-- employees list
+- create table
+- route middleware
+- fectch api
+- employee services
+
+## Need to do
+- create database
 - performance review list
+
+## Improve
+- server side rendering

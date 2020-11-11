@@ -1,25 +1,25 @@
-import Koa from "koa";
-import Router from "koa-router";
+import Koa from 'koa';
+import cors from 'koa2-cors';
+import bodyParser from 'koa-bodyparser';
+import router from './routes';
+import { sequelize } from './database';
+import { Employee } from './database/models';
+
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+    // create table if not exist
+    await Employee.sync();
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+})();
 
 const app = new Koa();
-const router = new Router();
-
-router.get('/employees', (ctx: Koa.Context) => {
-  console.log('employees')
-  ctx.body = 'employees';
-});
-
-router.post('/employees/create', (ctx: Koa.Context) => {
-  console.log('employees create')
-  ctx.body = 'employee create';
-});
-
-router.get('/', (ctx: Koa.Context) => {
-  ctx.body = 'Hello World111231231';
-});
-
+app.use(cors());
+app.use(bodyParser());
 app.use(router.routes());
 
-app.listen(3000);
-
-console.log('server at 3000');
+app.listen(3100);
+console.log('server at 3100');
