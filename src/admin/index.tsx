@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import { EmployeeList } from './employeeList';
+import { PerformanceList } from './performanceList';
 
 const { TabPane } = Tabs;
 
@@ -10,9 +11,7 @@ interface Props {
   }
 }
 
-const Admin: React.FC<Props> = (props) => {
-
-  const { history } = props;
+const Admin: React.FC<Props> = () => {
 
   const onTabChange = (selectedkey: string) => {
     if (selectedkey === '1') {
@@ -25,10 +24,10 @@ const Admin: React.FC<Props> = (props) => {
   return (
     <Tabs defaultActiveKey="1" onChange={onTabChange} centered>
       <TabPane tab="Employee" key="1">
-        <EmployeeList history={history} />
+        <EmployeeList/>
       </TabPane>
       <TabPane tab="PerformanceReview" key="2">
-        PerformanceReview
+        <PerformanceList />
       </TabPane>
     </Tabs>
   )

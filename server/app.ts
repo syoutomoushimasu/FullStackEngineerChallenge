@@ -3,14 +3,16 @@ import cors from 'koa2-cors';
 import bodyParser from 'koa-bodyparser';
 import router from './routes';
 import { sequelize } from './database';
-import { Employee } from './database/models';
+import { Employee, Performance, Review } from './database/models';
 
 (async () => {
   try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
     // create table if not exist
-    await Employee.sync();
+    await Employee.sync({ alter: true });
+    await Performance.sync({ alter: true });
+    await Review.sync({ alter: true });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

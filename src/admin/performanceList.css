@@ -1,0 +1,15 @@
+.new-performance {
+  margin-top: 10px;
+}
+
+.new-performance-wrapper {
+  width: 300px;
+}
+
+.performance-list {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

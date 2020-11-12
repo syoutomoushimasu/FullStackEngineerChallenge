@@ -3,19 +3,13 @@ import { Button, Modal, Input, Row, Col, message, List, Avatar } from 'antd';
 import { FETCH_URL } from '@/utils/constant';
 import './employeeList.css';
 
-interface Props {
-  history: {
-    push: (url: string) => void;
-  }
-}
-
 interface Employee {
   id: string;
   name: string;
   email: string;
 }
 
-const EmployeeList: React.FC<Props> = (props) => {
+const EmployeeList: React.FC = () => {
   const [addVisible, setAddVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
   const [name, setName] = useState<string | undefined>(undefined);

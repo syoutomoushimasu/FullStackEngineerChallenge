@@ -22,11 +22,18 @@
 ## Day 4
 - employee list
 - employee edit && delete
-- performance review list
+- performance create
+
+## Day 5
+- performance list
+- performance update
 
 ## Need to do
+- admin children router
 - create database
 - ts-jest
+- prettifier
+- vscode code color?
 
 ## Improve
 - server side rendering
