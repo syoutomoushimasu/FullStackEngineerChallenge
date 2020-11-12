@@ -19,9 +19,15 @@
 - fectch api
 - employee services
 
+## Day 4
+- employee list
+- employee edit && delete
+- performance review list
+
 ## Need to do
 - create database
-- performance review list
+- ts-jest
 
 ## Improve
 - server side rendering
+- redux
