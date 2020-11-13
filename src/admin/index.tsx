@@ -1,35 +1,49 @@
 import React from 'react';
-import { Tabs } from 'antd';
+import { Switch, Route } from "react-router-dom";
+import { Button } from 'antd';
+import { History } from "history";
 import { EmployeeList } from './employeeList';
 import { PerformanceList } from './performanceList';
-
-const { TabPane } = Tabs;
+import './index.css';
 
 interface Props {
-  history: {
-    push: (url: string) => void;
-  }
+  history: History
 }
 
-const Admin: React.FC<Props> = () => {
+const Admin: React.FC<Props> = (props) => {
 
-  const onTabChange = (selectedkey: string) => {
-    if (selectedkey === '1') {
-      console.log('selectedKey 1')
-    } else if (selectedkey === '2') {
-      console.log('selectedKey 2')
-    }
+  // console.log(props);
+
+  const goBack = () => {
+    props.history.push('/');
+  }
+
+  const goEmployee = () => {
+    props.history.push('/admin/employee')
+  }
+
+  const goPerformance = () => {
+    props.history.push('/admin/performance');
   }
 
   return (
-    <Tabs defaultActiveKey="1" onChange={onTabChange} centered>
-      <TabPane tab="Employee" key="1">
-        <EmployeeList/>
-      </TabPane>
-      <TabPane tab="PerformanceReview" key="2">
-        <PerformanceList />
-      </TabPane>
-    </Tabs>
+    <div>
+      <div className="go-back-wrapper">
+        <Button onClick={goEmployee}>Employee</Button>
+        <Button onClick={goPerformance}>Performance</Button>
+      </div>
+      <Switch>
+        <Route path={`/admin/employee`}>
+          <EmployeeList />
+        </Route>
+        <Route path={`/admin/performance`} exact={true}>
+          <PerformanceList />
+        </Route>
+      </Switch>
+      <div className="go-back-wrapper">
+        <Button className="go-back" onClick={goBack}>Back Login</Button>
+      </div>
+    </div>
   )
 }
 

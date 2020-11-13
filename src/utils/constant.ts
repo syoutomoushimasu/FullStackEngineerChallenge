@@ -1,1 +1,1 @@
-export const FETCH_URL = 'http://localhost:3100';
+export const FETCH_API = 'http://localhost:3100/api';

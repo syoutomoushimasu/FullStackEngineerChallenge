@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Row, Col, Select, message, Input } from 'antd';
-import { FETCH_URL } from '@/utils/constant';
+import { Button, Modal, Row, Col, Select, message, Input, List, Avatar } from 'antd';
+import { FETCH_API } from '@/utils/constant';
 import './performanceList.css';
 
 const { Option } = Select;
@@ -11,6 +11,19 @@ interface Employee {
   email: string;
 }
 
+interface Performance {
+  id: string;
+  title: string;
+  employeeId: string;
+  reviewers: Review[];
+}
+
+interface Review {
+  id: string;
+  performanceId: string;
+  employeeId: string;
+}
+
 const PerformanceList: React.FC = () => {
   const [addVisible, setAddVisible] = useState(false)
   const [employeeList, setEmployeeList] = useState<Employee[]>([]);
@@ -18,6 +31,10 @@ const PerformanceList: React.FC = () => {
   const [reviewedByList, setReviewedByList] = useState<Employee[]>([]);
   const [reviewedByValue, setReviewedByValue] = useState<string[]>([])
   const [title, setTitle] = useState<string | undefined>(undefined);
+  const [performanceList, setPerformanceList] = useState<Performance[]>([]);
+  const [editVisible, setEditVisible] = useState(false);
+  const [performanceEdit, setPerformanceEdit] = useState<Performance | null>(null);
+  const [titleEdit, setTitleEdit] = useState('');
 
   const addShowModal = () => {
     setAddVisible(true);
@@ -29,8 +46,7 @@ const PerformanceList: React.FC = () => {
       reviewedByArr: reviewedByValue,
       title
     };
-    console.log(data)
-    fetch(`${FETCH_URL}/api/performance/create`, {
+    fetch(`${FETCH_API}/performance/create`, {
       body: JSON.stringify(data),
       method: 'post',
       mode: 'cors',
@@ -49,6 +65,7 @@ const PerformanceList: React.FC = () => {
           message.error('create failed.');
         }
         setAddVisible(false);
+        fetchPerformances();
       });
   }
 
@@ -77,8 +94,72 @@ const PerformanceList: React.FC = () => {
     });
   }
 
+  const getEmployeeNameById = (id: string) => {
+    const result = employeeList.filter(item => {
+      return String(item.id) === String(id);
+    });
+    return result[0].name;
+  }
+
+  const getReviewerName = (reviewers: Review[]) => {
+    const result = reviewers.map(r => {
+      const emp = employeeList.filter(item => item.id == r.employeeId)
+      return emp[0].name;
+    })
+    return result.join(', ');
+  }
+
+  const editShowModal = (item: Performance) => {
+    setPerformanceEdit(item);
+    setTitleEdit(item.title);
+    setEditVisible(true);
+  }
+
+  const viewShowModal = (item: Performance) => {
+    //
+  }
+
+  const editOk = () => {
+    if (!performanceEdit) {
+      message.error('Please input title.');
+      return;
+    }
+    fetch(`${FETCH_API}/performance/update`, {
+        body: JSON.stringify({
+          title: titleEdit,
+          performanceId: performanceEdit.id
+        }),
+        method: 'post',
+        mode: 'cors',
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(res) {
+        if (res.status === 'success') {
+          message.success('edit success.');
+          fetchPerformances();
+        } else {
+          message.error('edit failed.');
+        }
+        setEditVisible(false);
+      });
+  }
+
+  const editCancel = () => {
+    setEditVisible(false);
+    setPerformanceEdit(null);
+  }
+
+  const editTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitleEdit(e.target.value);
+  }
+
   const fetchEmployees = () => {
-    fetch(`${FETCH_URL}/api/employee/list`, {
+    fetch(`${FETCH_API}/employee/list`, {
       method: 'get',
       mode: 'cors'
     })
@@ -90,12 +171,46 @@ const PerformanceList: React.FC = () => {
       });
   }
 
+  const fetchPerformances = () => {
+    fetch(`${FETCH_API}/performance/list`, {
+      method: 'get',
+      mode: 'cors'
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (res) {
+        setPerformanceList(res);
+      });
+  }
+
   useEffect(() => {
     fetchEmployees();
+    fetchPerformances();
   }, []);
 
   return (
     <div className="performance-list">
+      <List
+        dataSource={performanceList}
+        style={{width: '600px'}}
+        renderItem={item => (
+          <List.Item
+            actions={[
+              <Button type="primary" onClick={() => editShowModal(item)}>Edit</Button>,
+              <Button onClick={() => viewShowModal(item)}>View</Button>
+            ]}
+          >
+            <List.Item.Meta
+              avatar={
+                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+              }
+              title={`【${getEmployeeNameById(item.employeeId)}】${item.title}`}
+              description={`Reviewed by: ${getReviewerName(item.reviewers)}`}
+            />
+          </List.Item>
+        )}
+      />
       <div className="new-performance-wrapper">
         <Button
           type="primary"
@@ -140,7 +255,6 @@ const PerformanceList: React.FC = () => {
             </Select>
           </Col>
         </Row>
-        <br />
         <Row>
           <Col span={24}>
             <div className="label">Reviewed By: </div>
@@ -161,6 +275,22 @@ const PerformanceList: React.FC = () => {
                 })
               }
             </Select>
+          </Col>
+        </Row>
+      </Modal>
+      <Modal
+        title="Edit Employee"
+        visible={editVisible}
+        onOk={editOk}
+        onCancel={editCancel}
+        destroyOnClose={true}
+      >
+        <Row>
+          <Col span={4}>
+            <div className="label">Title: </div>
+          </Col>
+          <Col span={12}>
+            <Input placeholder="Performance title"  value={titleEdit}  onChange={editTitleChange} />
           </Col>
         </Row>
       </Modal>

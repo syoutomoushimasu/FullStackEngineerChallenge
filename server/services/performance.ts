@@ -1,13 +1,10 @@
-import { DatabaseError } from 'sequelize/types';
-import { Performance } from '../database/models';
-import { Review } from '../database/models';
+import { Review, Performance } from '../database/models';
 
 export const addPerformance = async (
   employeeId: string, 
   reviewedByArr: string[], 
   title: string
 ) => {
-  console.log('add performance', { employeeId, reviewedByArr, title })
   const performance = await Performance.findAll({
     where: {
       title
@@ -30,4 +27,43 @@ export const addPerformance = async (
     })
     return true;
   }
+}
+
+export const getPerformanceList = async () => {
+  const performances = await Performance.findAll();
+
+  if (performances.length > 0) {
+    const result = await Promise.all(
+      performances.map(async (p) => {
+        const reviewers = await Review.findAll({
+          where: {
+            performanceId: p.id
+          }
+        });
+        return {
+          id: p.id,
+          title: p.title,
+          employeeId: p.employeeId,
+          reviewers
+        };
+      })
+    );
+    return result;
+  }
+
+  return performances;
+};
+
+export const updatePerformance = async (performanceId: string, title: string) => {
+  await Performance.update(
+    {
+      title
+    },
+    {
+      where: {
+        id: performanceId
+      }
+    }
+  );
+  return true;
 }

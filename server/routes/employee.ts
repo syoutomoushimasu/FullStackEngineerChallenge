@@ -1,9 +1,9 @@
 import Router from 'koa-router';
 import Koa from 'koa';
-import { 
-  addEmployee, 
-  getEmployeeList, 
-  updateEmployee ,
+import {
+  addEmployee,
+  getEmployeeList,
+  updateEmployee,
   deleteEmployee
 } from '../services/employee';
 

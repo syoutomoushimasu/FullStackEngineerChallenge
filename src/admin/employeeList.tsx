@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Input, Row, Col, message, List, Avatar } from 'antd';
-import { FETCH_URL } from '@/utils/constant';
+import { FETCH_API } from '@/utils/constant';
 import './employeeList.css';
 
 interface Employee {
@@ -33,7 +33,7 @@ const EmployeeList: React.FC = () => {
       message.error('Please input name and email.');
       return;
     }
-    fetch(`${FETCH_URL}/api/employee/create`, {
+    fetch(`${FETCH_API}/employee/create`, {
         body: JSON.stringify({ name, email }),
         method: 'post',
         mode: 'cors',
@@ -60,7 +60,7 @@ const EmployeeList: React.FC = () => {
       message.error('Please input name and email.');
       return;
     }
-    fetch(`${FETCH_URL}/api/employee/edit`, {
+    fetch(`${FETCH_API}/employee/edit`, {
         body: JSON.stringify({ name: nameEdit, email: emailEdit }),
         method: 'post',
         mode: 'cors',
@@ -111,7 +111,7 @@ const EmployeeList: React.FC = () => {
   }
 
   const onDelete = (item: Employee) => {
-    fetch(`${FETCH_URL}/api/employee/delete`, {
+    fetch(`${FETCH_API}/employee/delete`, {
       body: JSON.stringify({ name: item.name }),
       method: 'post',
       mode: 'cors',
@@ -133,7 +133,7 @@ const EmployeeList: React.FC = () => {
   }
 
   const fetchEmployees = () => {
-    fetch(`${FETCH_URL}/api/employee/list`, {
+    fetch(`${FETCH_API}/employee/list`, {
       method: 'get',
       mode: 'cors'
     })

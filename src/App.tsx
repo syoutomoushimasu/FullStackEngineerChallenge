@@ -6,24 +6,28 @@ import {
 } from "react-router-dom";
 import { Login } from './login';
 import { Admin } from './admin';
+import { EmployeeIndex } from './employee';
 
 const App: React.FC<{}> = () => {
   return (
     <Router>
       <Switch>
         <Route 
-          path="/admin"
-          render={routeProps => (
-            <Admin {...routeProps} />
-          )}
-        />
-        <Route 
           path="/"
           exact={true}
           render={routeProps => (
             <Login {...routeProps} />
           )}
-       />
+        />
+        <Route 
+          path="/admin"
+          render={routeProps => (
+            <Admin {...routeProps} />
+          )}
+        />
+        <Route path="/employee">
+          <EmployeeIndex />
+        </Route>
       </Switch>
     </Router>
   );
