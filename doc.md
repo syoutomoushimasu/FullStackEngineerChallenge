@@ -31,14 +31,18 @@
   - admin children router
   - employees route
 
+- Day 6
+  - feedback view
+  - feedback create && list endpoint
+  - performance view ui
+  - get feedbacks endpoint
+
 ## Todo
-- performance view
-- create database
-- ts-jest
-- prettifier
-- vscode code color?
+- doc assumptions
+  - create database
+  - npx yarn install
 
 ## Improve
-- server side rendering
 - redux
-- graphQL
+- ts-jest
+- prettifier

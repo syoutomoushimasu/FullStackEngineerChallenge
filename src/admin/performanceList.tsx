@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Row, Col, Select, message, Input, List, Avatar } from 'antd';
+import {
+  Button,
+  Modal,
+  Row,
+  Col,
+  Select,
+  message,
+  Input,
+  List,
+  Avatar,
+  Card
+} from 'antd';
 import { FETCH_API } from '@/utils/constant';
 import './performanceList.css';
 
@@ -24,6 +35,12 @@ interface Review {
   employeeId: string;
 }
 
+interface Feedback {
+  performanceId: string;
+  feedback: string;
+  reviewerId: string;
+}
+
 const PerformanceList: React.FC = () => {
   const [addVisible, setAddVisible] = useState(false)
   const [employeeList, setEmployeeList] = useState<Employee[]>([]);
@@ -35,6 +52,7 @@ const PerformanceList: React.FC = () => {
   const [editVisible, setEditVisible] = useState(false);
   const [performanceEdit, setPerformanceEdit] = useState<Performance | null>(null);
   const [titleEdit, setTitleEdit] = useState('');
+  // const [feedbackList, setFeedbackList] = useState <Feedback[]>([]);
 
   const addShowModal = () => {
     setAddVisible(true);
@@ -115,8 +133,49 @@ const PerformanceList: React.FC = () => {
     setEditVisible(true);
   }
 
-  const viewShowModal = (item: Performance) => {
-    //
+  const viewShowModal = async (item: Performance) => {
+    const feedbackList = await getFeedbackListByPerformanceId(item.id);
+    Modal.info({
+      title: `【${getEmployeeNameById(item.employeeId)}】${item.title}`,
+      content: (
+        <div>
+          <List
+            dataSource={feedbackList}
+            renderItem={feedback => (
+              <List.Item>
+                <Card
+                  style={{
+                    width: '100%'
+                  }}
+                  title={
+                  `Reviewer: ${getEmployeeNameById(feedback.reviewerId)}`
+                  }
+                >
+                  {feedback.feedback}
+                </Card>
+              </List.Item>
+            )}
+          />
+        </div>
+      ),
+      width: '600px'
+    });
+  }
+
+  const getFeedbackListByPerformanceId = async (
+    performanceId: string
+  ): Promise<Feedback[]> => {
+    const data = { performanceId }
+    const res = await fetch(`${FETCH_API}/performance/getFeedback`, {
+      body: JSON.stringify(data),
+      method: 'post',
+      mode: 'cors',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    const result = await res.json();
+    return result;
   }
 
   const editOk = () => {

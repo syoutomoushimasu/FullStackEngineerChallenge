@@ -3,7 +3,7 @@ import cors from 'koa2-cors';
 import bodyParser from 'koa-bodyparser';
 import router from './routes';
 import { sequelize } from './database';
-import { Employee, Performance, Review } from './database/models';
+import { Employee, Performance, Review, Feedback } from './database/models';
 
 (async () => {
   try {
@@ -13,6 +13,7 @@ import { Employee, Performance, Review } from './database/models';
     await Employee.sync({ alter: true });
     await Performance.sync({ alter: true });
     await Review.sync({ alter: true });
+    await Feedback.sync({ alter: true });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

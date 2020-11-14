@@ -1,4 +1,4 @@
-import { Review, Performance } from '../database/models';
+import { Review, Performance, Feedback } from '../database/models';
 
 export const addPerformance = async (
   employeeId: string, 
@@ -54,7 +54,53 @@ export const getPerformanceList = async () => {
   return performances;
 };
 
-export const updatePerformance = async (performanceId: string, title: string) => {
+export const getPerformanceListByEmployeeId = async (
+  employeeId: string
+) => {
+  const performances = await Performance.findAll();
+
+  if (performances.length > 0) {
+    const result = await Promise.all(
+      performances.map(async p => {
+        const reviewers = await Review.findAll({
+          where: {
+            performanceId: p.id
+          }
+        });
+        const filterReviewers = reviewers.filter(r => {
+          return String(r.employeeId) === String(employeeId);
+        });
+        const feedbackRecord = await Feedback.findOne({
+          where: {
+            performanceId: p.id,
+            reviewerId: employeeId
+          }
+        });
+        // filter out by
+        // the employee is in the reviewer list
+        // and the employee didn't write feedback
+        if (filterReviewers.length > 0 && !feedbackRecord) {
+          return {
+            id: p.id,
+            title: p.title,
+            employeeId: p.employeeId,
+            reviewers
+          };
+        } else {
+          return null;
+        }
+      })
+    );
+    // console.log('getPerformanceListByEmployeeId result..', result)
+    return result.filter(r => r !==null);
+  }
+  return performances;
+};
+
+export const updatePerformance = async (
+  performanceId: string,
+  title: string
+) => {
   await Performance.update(
     {
       title
@@ -66,4 +112,28 @@ export const updatePerformance = async (performanceId: string, title: string) =>
     }
   );
   return true;
+}
+
+export const createPerformanceFeedback = async (
+  feedback: string,
+  reviewerId: string,
+  performanceId: string
+) => {
+  await Feedback.create({
+    feedback,
+    reviewerId,
+    performanceId
+  });
+  return true;
+}
+
+export const getPerformanceFeedback = async (
+  performanceId: string
+) => {
+  const result = await Feedback.findAll({
+    where: {
+      performanceId
+    }
+  })
+  return result;
 }

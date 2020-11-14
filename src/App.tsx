@@ -25,9 +25,12 @@ const App: React.FC<{}> = () => {
             <Admin {...routeProps} />
           )}
         />
-        <Route path="/employee">
-          <EmployeeIndex />
-        </Route>
+        <Route 
+          path="/employee"
+          render={routeProps => (
+            <EmployeeIndex {...routeProps} />
+          )}
+        />
       </Switch>
     </Router>
   );
