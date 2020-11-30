@@ -80,6 +80,8 @@ Admin can create/edit/view performance reivew
   - get feedbacks endpoint
 - Day 7
   - complete the document
+- Over 7days
+  - ts-jest
 
 ## What can be improved in the test
 
